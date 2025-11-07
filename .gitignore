@@ -41,12 +41,15 @@ __pycache__/
 *.pyd
 .ipynb_checkpoints/
 
-build/
-dist/
+/build/
+/dist/
 .eggs/
 *.egg-info/
 *.egg
 *.whl
+
+# Explicitly allow source build module
+!src/civic_geo_generator/build/
 
 # Test / coverage / linters
 .pytest_cache/
@@ -77,10 +80,10 @@ reports/
 tmp/
 
 # ----------------------------------------
-# Ignore in library projects
+# Ignore in installable (PyPi) projects
 # ----------------------------------------
 # Dependency lock file for the 'uv' package manager
-#uv.lock
+uv.lock
 
 # ----------------------------------------
 # Data repos
@@ -127,3 +130,4 @@ node_modules/
 zig-out/
 .zig-cache/
 zig-cache/
+
