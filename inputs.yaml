@@ -1,0 +1,6 @@
+# inputs.yaml  (batch mode)
+runs:
+  - state: MN
+    views: [precincts]
+    version_overrides:
+      precincts: "2025-04"

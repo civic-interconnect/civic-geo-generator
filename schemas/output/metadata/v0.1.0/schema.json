@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civic-interconnect.org/schemas/output/metadata/v0.1.0/schema.json",
+  "title": "Civic Geo Generator: metadata.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "unit_type",
+    "id_field",
+    "name_field",
+    "snapshot_version",
+    "generated_at",
+    "paths",
+    "stats",
+    "spatial",
+    "source_name",
+    "source_url",
+    "license",
+    "source_fields"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "unit_type": {
+      "type": "string",
+      "enum": [
+        "precinct",
+        "ward",
+        "school_district",
+        "county",
+        "congressional_district",
+        "other"
+      ]
+    },
+    "id_field": { "type": "string", "minLength": 1 },
+    "name_field": { "type": "string", "minLength": 1 },
+    "label_point_field": { "type": "string" },
+    "snapshot_version": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}$"
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_geojson", "web_geojson"],
+      "properties": {
+        "full_geojson": { "type": "string", "minLength": 1 },
+        "web_geojson": { "type": "string", "minLength": 1 },
+        "web_topojson": { "type": "string" }
+      }
+    },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["features", "bbox"],
+      "properties": {
+        "features": { "type": "integer", "minimum": 0 },
+        "bbox": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 4,
+          "maxItems": 4
+        }
+      }
+    },
+    "spatial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["crs", "geometry_type"],
+      "properties": {
+        "crs": { "type": "string", "const": "EPSG:4326" },
+        "geometry_type": {
+          "type": "string",
+          "enum": ["Polygon", "MultiPolygon"]
+        }
+      }
+    },
+    "web": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "topojson_simplify_pct": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        }
+      }
+    },
+    "source_name": { "type": "string", "minLength": 1 },
+    "source_url": { "type": "string", "format": "uri" },
+    "license": { "type": "string", "minLength": 1 },
+    "license_url": { "type": "string", "format": "uri" },
+    "source_fields": {
+      "type": "object",
+      "description": "Map canonical field -> array of original source fields",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "checksums": {
+      "type": "object",
+      "description": "Map of filename -> sha256 hex digest",
+      "additionalProperties": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+# data-config/us/mn/school_districts.yaml
+schema_version: 1
+state: MN
+state_name: Minnesota
+state_fips: "27"
+
+version: "2025-04"
+publish_repo: "civic-interconnect/civic-data-us/mn/school-districts"
+
+input:
+  # choose exactly one
+  # url: "https://example.com/mn/school_districts.geojson"
+  path: "data-in/mn/school_districts_source.geojson"
+
+fields:
+  lowercase: true
+  trim: true
+  rename:
+    distname: district_name
+    distid: district_id
+  keep: ["district_id", "district_name", "county", "geometry"]
+  add:
+    country: US
+    state: MN
+    layer_kind: school_districts
+
+topojson:
+  enabled: false
+  simplify_pct: 10

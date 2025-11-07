@@ -1,0 +1,130 @@
+# .github/workflows/ci.yml
+name: CI (Continuous Integration)
+#
+# DESIGN PRINCIPLES:
+# - CI VALIDATES, never modifies
+# - Scope naming (Assemble/Baseline/Coverage/Deploy) reinforces CI/CD patterns
+# - Fail fast design - catch issues early
+#
+# CI PHASES A-B-C-D:
+# - Assemble: Install dependencies, verify environment setup
+# - Baseline: Core validation (types exist, lint passes, tests pass)
+# - Coverage: Generate reports and upload artifacts
+# - Deploy: Build package and docs (sanity checks for release readiness)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUNBUFFERED: "1" # real-time logging
+  PYTHONIOENCODING: "utf-8"
+  MPLBACKEND: Agg # headless matplotlib
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    continue-on-error: ${{ matrix.python-version == '3.13' }}
+    strategy:
+      fail-fast: false  # run all Python versions even if one fails
+      matrix:
+        python-version: [ "3.12", "3.13" ]
+
+    steps:
+
+      # ------------------- ASSEMBLE -------------------
+
+      - name: A1) Checkout (with tag history)
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # Full history for tags
+
+      - name: A2) Install uv (with caching)
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: A3) Pin Python version ${{ matrix.python-version }}
+        run: uv python pin ${{ matrix.python-version }}
+
+      - name: A4) Display version information
+        run: |
+          python --version
+          uv --version
+          uv pip list | head -n 50
+
+      - name: A5) Sync to install dependencies
+        run: |
+          if [ "${{ matrix.python-version }}" = "3.12" ]; then
+            uv sync --extra dev --extra docs --upgrade
+          else
+            uv sync --extra dev --upgrade
+          fi
+
+      # ------------------- BASELINE CHECKS -------------------
+
+      - name: B1) Validate pyproject
+        run: uvx validate-pyproject
+
+      - name: B2) Ruff lint (check only)
+        run: uvx ruff check .
+
+      - name: B3) Pyright (type check)
+        run: uvx pyright --verbose
+
+      - name: B4) Deptry (dependency check)
+        run: uvx deptry .
+
+      # ------------------- COVERAGE (TESTING) -------------------
+
+      - name: C1) Run tests (coverage only on 3.12; skip if no tests/)
+        id: test
+        shell: bash
+        run: |
+          set -e
+          export PYTHONPATH="$PWD/src"
+          if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
+            if [ "${{ matrix.python-version }}" = "3.12" ]; then
+              uv run pytest --maxfail=1 --disable-warnings
+              echo "has_coverage=true" >> "$GITHUB_OUTPUT"
+            else
+              uv run pytest --maxfail=1 --disable-warnings --no-cov
+              echo "has_coverage=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "No tests found. Skipping pytest."
+            echo "has_coverage=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: C2) Upload coverage HTML
+        if: always() && hashFiles('htmlcov/index.html') != ''
+        uses: actions/upload-artifact@v5
+        with:
+          name: htmlcov-${{ matrix.python-version }}
+          path: htmlcov
+
+      # ------------ DEPLOY (SANITY CHECKS ONLY) -------------------
+
+      - name: D1) Build docs with (mkdocs) but don't deploy yet
+        if: matrix.python-version == '3.12'
+        run: |
+          if [ -f "mkdocs.yml" ] || [ -f "mkdocs.yaml" ]; then
+            uv run mkdocs build --strict
+          else
+            echo "No mkdocs config found; skipping docs build."
+          fi
+
+      - name: D2) Build package (sanity check)
+        if: matrix.python-version == '3.12'
+        run: uv build

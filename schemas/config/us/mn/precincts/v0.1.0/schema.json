@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civic-interconnect.org/schemas/config/us/mn/precincts/v0.1.0/schema.json",
+  "title": "Minnesota Precincts Config",
+  "description": "Minnesota-specific extensions for precinct processing",
+  "allOf": [
+    {
+      "$ref": "../../../precincts/v0.1.0/schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "mn_specific": {
+          "type": "object",
+          "description": "Minnesota-specific configuration",
+          "properties": {
+            "county_fips_field": {
+              "type": "string",
+              "description": "Field containing county FIPS codes",
+              "default": "COUNTYFIPS"
+            },
+            "mcd_field": {
+              "type": "string",
+              "description": "Field for Minor Civil Division codes",
+              "default": "MCDCODE"
+            },
+            "vtd_field": {
+              "type": "string",
+              "description": "Field for Voting Tabulation District",
+              "default": "VTD"
+            },
+            "congressional_district_field": {
+              "type": "string",
+              "description": "Field for congressional district number",
+              "default": "CONGDIST"
+            },
+            "legislative_district_field": {
+              "type": "string",
+              "description": "Field for state legislative district",
+              "default": "LEGDIST"
+            },
+            "senate_district_field": {
+              "type": "string",
+              "description": "Field for state senate district",
+              "default": "SENDIST"
+            },
+            "commissioner_district_field": {
+              "type": "string",
+              "description": "Field for county commissioner district",
+              "default": "COMMDIST"
+            },
+            "school_district_field": {
+              "type": "string",
+              "description": "Field for school district identifier",
+              "default": "ISD"
+            },
+            "require_county_validation": {
+              "type": "boolean",
+              "description": "Validate that all 87 MN counties are present",
+              "default": true
+            },
+            "source_metadata": {
+              "type": "object",
+              "description": "Minnesota Secretary of State source info",
+              "properties": {
+                "agency": {
+                  "type": "string",
+                  "default": "Minnesota Secretary of State"
+                },
+                "election_date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Election date these precincts are valid for"
+                },
+                "contact_email": {
+                  "type": "string",
+                  "default": "election.center@state.mn.us"
+                }
+              }
+            }
+          }
+        },
+        "build": {
+          "type": "object",
+          "properties": {
+            "add_fields": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "type": "string",
+                  "const": "MN",
+                  "description": "Always add state='MN' to features"
+                },
+                "state_fips": {
+                  "type": "string",
+                  "const": "27",
+                  "description": "Minnesota FIPS code"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

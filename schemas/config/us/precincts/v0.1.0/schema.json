@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "US Precincts Build Config (MN-compatible)",
+  "type": "object",
+  "properties": {
+    "layers": {
+      "type": "object",
+      "description": "Named sources to fetch; keys are layer IDs like 'mn_precincts_statewide'.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "nationwide": { "type": "boolean" },
+          "url": { "type": "string" },
+          "output_dir": { "type": "string" },
+          "timeout_sec": { "type": "integer", "minimum": 1 }
+        },
+        "required": ["url", "output_dir"],
+        "additionalProperties": true
+      }
+    },
+    "build": {
+      "type": "object",
+      "description": "Parameters consumed by your existing build step.",
+      "properties": {
+        "version": { "type": "string" },
+        "input_path": { "type": "string" },
+        "fields_lowercase": { "type": "boolean" },
+        "fields_trim": { "type": "boolean" },
+        "fields_rename": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "fields_keep": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "add_fields": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "write_topojson": { "type": "boolean" },
+        "simplify_pct": { "type": "integer", "minimum": 0, "maximum": 50 },
+        "repair_geometries": { "type": "boolean" }
+      },
+      "required": ["version", "input_path"],
+      "additionalProperties": true
+    }
+  },
+  "required": ["layers", "build"],
+  "additionalProperties": true
+}
