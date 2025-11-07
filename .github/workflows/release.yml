@@ -58,7 +58,7 @@ jobs:
         run: uvx ruff check .
 
       - name: B3) Pyright (type check)
-        run: uvx pyright
+        run: uv run pyright
 
       - name: B4) Deptry (dependency check)
         run: uvx deptry .
