@@ -43,6 +43,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [ # Add all to deptry ignores
   "pre-commit",
+  "pyright",
   "pytest",
   "pytest-cov",
   "pytest-env",
@@ -130,6 +131,7 @@ package_module_name_map = {PyYAML = "yaml"  }
 DEP002 = [
   # Dev dependencies
   "pre-commit",
+  "pyright",
   "pytest",
   "pytest-cov",
   "pytest-env",
@@ -150,10 +152,6 @@ DEP002 = [
 ]
 
 [tool.pyright]
-executionEnvironments = [
-  { root = ".",    extraPaths = ["./src"] },
-  { root = "tests", extraPaths = ["./src"] },
-]
 extraPaths = ["./src"]
 ignore = ["**/__pycache__", "build", "dist", ".venv"]
 include = ["src", "tests"]

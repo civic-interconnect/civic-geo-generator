@@ -67,7 +67,7 @@ repos:
 
       - id: B5-pyright
         name: B5) Pyright (type checking)
-        entry: uvx pyright
+        entry: uv run pyright
         language: system
         pass_filenames: false
         types: [python]
