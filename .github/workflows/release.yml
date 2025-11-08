@@ -52,6 +52,7 @@ jobs:
           uv sync --extra dev --extra docs --upgrade
 
       # ------------------- BASELINE / TESTS -------------------
+
       - name: B1) Validate pyproject
         run: uvx validate-pyproject
 

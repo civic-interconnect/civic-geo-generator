@@ -163,11 +163,14 @@ class GeoGeneratorConfig:
 
         # Local development mode
         if os.getenv("CIVIC_USE_LOCAL_SCHEMA", "").lower() == "true":
-            return "../../../../schemas/output/metadata.schema.json"
+            return "../../../../schemas/output/metadata/v0.1.0/schema.json"
 
         # Build GitHub URL
         org = os.getenv("CIVIC_GH_ORG", "civic-interconnect")
         repo = os.getenv("CIVIC_GH_REPO", "civic-geo-generator")
-        ref = build_cfg.get("schema_version", "main")
-
-        return f"https://raw.githubusercontent.com/{org}/{repo}/{ref}/schemas/output/metadata/schema.json"
+        ref = build_cfg.get("schema_ref", "main")  # Git ref (branch/tag)
+        schema_version = build_cfg.get("schema_version", "v0.1.0")  # folder name
+        return (
+            f"https://raw.githubusercontent.com/{org}/{repo}/{ref}/"
+            f"schemas/output/metadata/{schema_version}/schema.json"
+        )

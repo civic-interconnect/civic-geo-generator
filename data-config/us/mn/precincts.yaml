@@ -13,9 +13,12 @@ layers:
 build:
   version: "2025-04"
   input_path: "us/mn/precincts_2025-04.json"
+  schema_version: "v0.1.0"
 
-  # Canonical absolute schema for published artifacts
-  schema_url: "https://raw.githubusercontent.com/civic-interconnect/civic-geo-generator/schemas/output/metadata/v0.1.0/schema.json"
+  source_name: "Minnesota Secretary of State"
+  source_url: "https://www.sos.state.mn.us/elections-voting/data-maps/precinct-maps/"
+  license: "CC-BY-4.0"
+
   fields_lowercase: true
   fields_trim: true
   required_columns: ["precinct_id", "precinct_name", "county"]

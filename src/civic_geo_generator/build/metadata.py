@@ -57,7 +57,7 @@ class MetadataWriter:
             "id_field": id_field,
             "name_field": name_field,
             "snapshot_version": self.version,
-            "generated_at": date_utils.now_utc_str(),
+            "generated_at": date_utils.now_utc_str_for_schemas(),
             "paths": {
                 "full_geojson": paths["full_path"].name,
                 "web_geojson": paths["web_name"],

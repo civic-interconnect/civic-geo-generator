@@ -14,6 +14,15 @@ and this project adheres to **[Semantic Versioning](https://semver.org/spec/v2.0
 
 ---
 
+## [0.1.3] - 2025-11-08
+
+### Changed
+- Using new date_utils.now_utc_str_for_schemas()
+- Outputting os-independent paths
+- Update pytest in pyproject.toml
+
+---
+
 ## [0.1.2] - 2025-11-06
 
 ### Changed

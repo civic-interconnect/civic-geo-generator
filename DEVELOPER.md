@@ -45,7 +45,7 @@ git add .
 uvx ruff check . --fix
 uvx ruff format .
 uvx deptry .
-uv run pyright --verbose
+uv run pyright
 uv run pytest
 ```
 

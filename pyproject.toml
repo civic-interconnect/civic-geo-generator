@@ -160,10 +160,7 @@ reportMissingTypeStubs = "warning"
 typeCheckingMode = "basic" # or "strict"
 # reportReturnType = "none"
 
-[tool.pytest.env]
-PYTEST_CURRENT_TEST = "true"
-
-[tool.pytest.ini_options]
+[tool.pytest]
 addopts = [
   "-ra", # show extra test summary info for skipped, failed, etc.
   "--strict-markers", # enforce marker usage such as "unit", "integration", etc.
@@ -174,10 +171,11 @@ addopts = [
   "-v", # verbose output
   "--tb=short", # short traceback format
 ]
-minversion = "7.0"
-python_files = "test_*.py"
+minversion = "9.0"
 pythonpath = ["src"]
-testpaths = ["tests"]
+testpaths = [
+    "tests"
+]
 
 [tool.ruff]
 exclude = [".venv", ".ruff_cache", "build", "dist", "*.egg-info", ".eggs", "__pycache__"]
