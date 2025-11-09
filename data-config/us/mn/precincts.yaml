@@ -5,7 +5,7 @@ $schema: ../../schemas/config/us/precincts/v0.1.0/schema.json
 
 layers:
   mn_precincts_statewide:
-    nationwide: true
+    nationwide: false
     url: https://example.state.mn.us/precincts_2025-04.zip
     output_dir: us/mn/precincts_2025-04
     timeout_sec: 120
